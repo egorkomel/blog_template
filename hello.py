@@ -1,1 +1,1 @@
-print("Hello, it's my blog")
+print("Hello, it's my blog!")
