@@ -1,0 +1,37 @@
+{% extends './base.html' %}
+{% load static %}
+{% block title %}Спасибо{% endblock %}
+
+{% block header %}
+    {% include './block/header.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <nav aria-label="breadcrumb" class="mt-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+                    <li class="breadcrumb-item active" aria-current="page"><a href="{% url 'contact' %}">Контакты</a></li>
+                </ol>
+            </nav>
+            <p class="lead">Ваше письмо отправлено! Спасибо.</p>
+            <table>
+                <tr>
+                    <label>Имя отправившего: {{ name }}</label>
+                </tr><br>
+                <tr>
+                    <label>Электронная почта: {{ from_email }}</label>
+                </tr><br>
+                <tr>
+                    <label>Тема сообщения: {{ subject }}</label>
+                </tr><br>
+                <tr>
+                    <label>Сообщение: {{ message }}</label>
+                </tr>
+            </table>
+    </div>
+</div>
+</div>
+{% endblock %}
