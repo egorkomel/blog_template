@@ -95,7 +95,7 @@ class FeedBackForm(forms.Form):
 
     message = forms.CharField(
         widget=forms.Textarea(attrs={
-            'class': 'forms-control md-textarea',
+            'class': 'form-control md-textarea',
             'id': 'message',
             'placeholder': "Ваше сообщение",
         })

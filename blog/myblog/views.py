@@ -6,6 +6,7 @@ from .models import Post
 from .form import SignUpForm, SignInForm, FeedBackForm
 from django.contrib.auth import login, authenticate
 from django.http import HttpResponseRedirect, HttpResponse
+from django.db.models import Q
 
 
 class MainView(View):
@@ -109,4 +110,25 @@ class SuccessView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'myblog/success.html', context={
             'title': "Спасибо :3",
+        })
+
+
+class SearchResultView(View):
+    def get(self, request, *args, **kwargs):
+        query = self.request.GET.get('q')
+        results = ""
+
+        if query:
+            results = Post.objects.filter(
+                Q(h1__icontains=query) | Q(content__icontains=query)
+            )
+
+        paginator = Paginator(results, 3)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        return render(request, 'myblog/search.html', context={
+            'title': 'Поиск',
+            'results': page_obj,
+            'count': paginator.count,
         })
