@@ -7,6 +7,7 @@ from .form import SignUpForm, SignInForm, FeedBackForm
 from django.contrib.auth import login, authenticate
 from django.http import HttpResponseRedirect, HttpResponse
 from django.db.models import Q
+from taggit.models import Tag
 
 
 class MainView(View):
@@ -131,4 +132,17 @@ class SearchResultView(View):
             'title': 'Поиск',
             'results': page_obj,
             'count': paginator.count,
+        })
+
+
+class TagView(View):
+    def get(self, request, slug, *args, **kwargs):
+        tag = get_object_or_404(Tag,slug=slug)
+        posts = Post.objects.filter(tag=tag)
+        common_tags = Post.tag.most_common()
+
+        return render(request, 'myblog/tag.html', context={
+            'title': f'#ТЭГ {tag}',
+            'posts': posts,
+            'common_tags': common_tags,
         })
