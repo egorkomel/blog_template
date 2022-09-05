@@ -25,8 +25,12 @@ class MainView(View):
 class PostViewDetail(View):
     def get(self, request, slug, *args, **kwargs):
         post = get_object_or_404(Post, url=slug)
+        common_tags = Post.tag.most_common()
+        last_posts = Post.objects.all().order_by('-id')[:3]
         return render(request, 'myblog/post_detail.html', context={
-            'post': post
+            'post': post,
+            'common_tags': common_tags,
+            'last_posts': last_posts,
         })
 
 
