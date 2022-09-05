@@ -2,8 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.views import View
 from django.core.paginator import Paginator
 from django.core.mail import send_mail, BadHeaderError
-from .models import Post
-from .form import SignUpForm, SignInForm, FeedBackForm
+from .models import Post, Comment
+from .form import SignUpForm, SignInForm, FeedBackForm, CommentForm
 from django.contrib.auth import login, authenticate
 from django.http import HttpResponseRedirect, HttpResponse
 from django.db.models import Q
@@ -27,12 +27,28 @@ class PostViewDetail(View):
         post = get_object_or_404(Post, url=slug)
         common_tags = Post.tag.most_common()
         last_posts = Post.objects.all().order_by('-id')[:3]
+        comment_form = CommentForm()
         return render(request, 'myblog/post_detail.html', context={
             'post': post,
             'common_tags': common_tags,
             'last_posts': last_posts,
+            'comment_form': comment_form,
         })
 
+    def post(self, request, slug, *args, **kwargs):
+        comment_form = CommentForm(request.POST)
+
+        if comment_form.is_valid():
+            text = request.POST['text']
+            username = self.request.user
+            post = get_object_or_404(Post, url=slug)
+            comment = Comment.objects.create(post=post, username=username, text=text)
+
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+        return render(request, 'myblog/post_deatail.html', context={
+             'comment_form': comment_form,
+         })
 
 class SignUpView(View):
     def get(self, request, *args, **kwargs):

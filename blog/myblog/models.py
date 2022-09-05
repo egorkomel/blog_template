@@ -18,3 +18,16 @@ class Post(models.Model): # создаем класс Post (таблицу в Б
 
     def __str__(self):  # нужна, чтобы в админке посты отображались по title, а не по id
         return self.title
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    username = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_name')
+    text = models.TextField()
+    created_at = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.text
